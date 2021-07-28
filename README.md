@@ -3,7 +3,11 @@ A script based IPS software for securing DNS Requests.
 
 ## Deploying
 
-soon
+```
+cd sedres/
+pip install configparser
+python3 database_setup.py
+```
 
 
 ## About
