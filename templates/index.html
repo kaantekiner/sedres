@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <title>Sedres - Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<style>
+.dropbtn
+{
+  background-color: #3498DB;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+.dropbtn:hover, .dropbtn:focus
+{
+  background-color: #2980B9;
+}
+.dropdown
+{
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content
+{
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropdown-content a
+{
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown a:hover {background-color: #ddd;}
+.show {display: block;}
+
+.main_div
+{
+float: left;
+display: inline-block;
+width: 50%;
+height: auto;
+background-color: #ffffff;
+}
+
+.alert_div
+{
+display: block;
+width: 100%;
+height: auto;
+background-color: #f5f2f2;
+}
+
+.log_div
+{
+float: left;
+display: inline-block;
+width: 50%;
+height: auto;
+background-color: #ffffff;
+}
+
+.iframe
+{
+width: 100%;
+border: 0;
+height: 1080px;
+}
+</style>
+
+<body>
+
+<div id="main_div_id" class="main_div">
+<div class="dropdown">
+  <button id="refresh_button" onclick="refresh_button_click()" class="dropbtn">Refresh</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a onclick="change_refresh_interval(2)">2 sec</a>
+    <a onclick="change_refresh_interval(5)">5 sec</a>
+    <a onclick="change_refresh_interval(10)">10 sec</a>
+  </div>
+</div>
+<br><br>
+<a>Server hostname:{{hostname}}</a><br>
+<a>Web access:{{web_access_address}}:{{web_access_port}}</a><br>
+<a>DNS service:{{dns_service_address}}:{{dns_service_port}}</a><br>
+<a>DNS resolver:{{dns_resolve_address}}</a><br><br>
+
+<a>total dns resolve:<a id="total_resolve"> (loading)</a></a><br>
+<a>secure dns resolve:<a id="secure_resolve"> (loading)</a></a><br>
+<a>insecure dns resolve:<a id="insecure_resolve"> (loading)</a></a><br><br>
+<a><b>Alerts</b></a><br>
+<a>Total:<a id="total_alert"> (loading)</a></a><br><br>
+<div id="alert_div_id" class="alert_div"></div>
+</div>
+
+
+<div id="log_div_id" class="log_div">
+     <iframe id="iframe_id" class="iframe" src="/logs"></iframe>
+</div>
+
+
+<script type=text/javascript>
+
+    var refresh_interval = 2;
+    var loop_var = setInterval(loop, refresh_interval * 1000);
+
+    document.getElementById("refresh_button").innerHTML = refresh_interval + " sec";
+
+    function loop()
+    {
+        load_resolves();
+        load_alert_count();
+        load_alerts();
+    }
+
+    function load_resolves()
+    {
+        $.ajax
+        ({
+            url: "get_resolve_counts",
+            type: "GET",
+            success: function (result)
+            {
+                var response_array = result.split(',');
+                document.getElementById("total_resolve").innerHTML = " " + response_array[0];
+                document.getElementById("secure_resolve").innerHTML = " " + response_array[1];
+                document.getElementById("insecure_resolve").innerHTML = " " + response_array[2];
+            },
+            error: function (error)
+            {
+              server_may_down(1);
+            }
+        });
+    }
+    function load_alert_count()
+    {
+        $.ajax
+        ({
+            url: "get_alert_count",
+            type: "GET",
+            success: function (result)
+            {
+                document.getElementById("total_alert").innerHTML = " " + result;
+            },
+            error: function (error)
+            {
+              server_may_down(2);
+            }
+        });
+    }
+    function load_alerts()
+    {
+        $.ajax
+        ({
+            url: "get_alerts",
+            type: "GET",
+            success: function (result)
+            {
+                document.getElementById("alert_div_id").innerHTML = "<br>" + result + "<br>";
+            },
+            error: function (error)
+            {
+              server_may_down(2);
+            }
+        });
+    }
+function server_may_down(err_code)
+{
+    alert("Server may down, please control it and reload this page. error code: " + err_code);
+    clearInterval(loop_var);
+}
+
+function refresh_button_click()
+{
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+window.onclick = function(event)
+{if (!event.target.matches('.dropbtn'))
+{
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+    var openDropdown = dropdowns[i];
+    if (openDropdown.classList.contains('show'))
+    {openDropdown.classList.remove('show');}}}
+}
+
+function change_refresh_interval(refresh_sec)
+{
+    refresh_interval = refresh_sec;
+    console.log("refresh interval changed to: " + refresh_sec);
+    clearInterval(loop_var);
+    loop_var = setInterval(loop, refresh_interval * 1000);
+    document.getElementById("refresh_button").innerHTML = refresh_sec + " sec";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // If you ever want to stop it...
+
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

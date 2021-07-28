@@ -1,0 +1,14 @@
+[general_configuration]
+web_access_port = 7000
+web_access_address = 127.0.0.1
+
+dns_service_address = 192.168.19.1
+dns_service_port = 53
+dns_resolve_address = 8.8.8.8
+dns_resolve_port = 53
+
+dns_blacklist = blacklist.list
+blacklist_interval_local = 120
+blacklist_interval_web = 600
+log_file = sedres.log
+database_file = db.sqlite

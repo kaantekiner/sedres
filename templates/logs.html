@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sedres - Logs</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body onload="get_logs()">
+<h3 id="dateandtime">Date & Time: </h3>
+<p id="logarea"></p>
+<script type=text/javascript>
+
+var refresh_interval = 5;
+var loop_var = setInterval(get_logs, refresh_interval * 1000);
+
+function get_logs()
+{
+    var dateandtime = new Date().toLocaleString();
+    document.getElementById("dateandtime").innerHTML = "Date & Time: " + dateandtime;
+
+    $.ajax
+    ({
+    url: "getlogs",
+    type: "GET",
+    success: function (result)
+    {
+        document.getElementById("logarea").innerHTML = result;
+    },
+    error: function (error)
+    {
+        alert("Problem occurred, please try again.");
+    }
+    });
+}
+</script>
+</body>
+</html>
+
