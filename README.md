@@ -11,6 +11,11 @@ soon
 soon
 
 
+## Paper
+
+You can examine the PDF found among the files.
+
+
 ## Capabilities & Effects
 
 - soon
