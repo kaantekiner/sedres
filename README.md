@@ -1,17 +1,22 @@
-# jwt-helper
-JWT Helper Tool 4 Pentests.
+# Secure DNS Resolution: Sedres
+A script based IPS software for securing DNS Requests.
 
+## Deploying
+
+soon
 
 
 ## About
 
+soon
 
- #### Capabilities
+
+## Capabilities & Effects
 
 - soon
 
 
-#### Needs
+## Needs
 
 - soon
 
